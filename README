@@ -1,0 +1,14 @@
+Example programs for Sort contest at http://tp-test1.corp.mail.ru
+
+sort - simple string sort based on std::vector and std::sort
+nsort - simple numeric sort for std::vector and std::sort
+
+str_sort - C - like IO for string sort
+num_sort - C - like IO & interface patterns for sort functions
+
+THis code is provided to eliminate difficulties related to I/O operations 
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!! Check that you use your own sort function       !!!!
+!!!! solutions based on std::sort will be iqualified !!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
