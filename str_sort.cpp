@@ -6,16 +6,14 @@
 #include <iterator>
 
 int main() {
-  const size_t MAX_SIZE = 256;
   std::vector<std::string> data;
 
-  char buff[MAX_SIZE];
-  while (1) {
-    if (scanf("%s", buff) != 1) {
-      break;
+  while (!std::cin.eof()) {
+    std::string line;
+    std::getline(std::cin, line);
+    if (!(std::cin.eof() and line.empty())) {
+      data.push_back(line);
     }
-
-    data.push_back(buff);
   }
   
   std::sort(data.begin(), data.end());

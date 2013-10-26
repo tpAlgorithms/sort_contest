@@ -16,7 +16,7 @@ int main() {
 //  for (size_t i = 0; i < num; ++i) {
   while (std::cin.good()) {
     std::string line;
-    std::cin >> line;
+    std::getline(std::cin, line);
     
     if (!line.empty()) {
       data.push_back(atoi(line.c_str()));

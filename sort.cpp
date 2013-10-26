@@ -2,71 +2,73 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <iostream>
 #include <algorithm> // you shouldn't use this header
 
-//  overwrite string comparison operator
-bool my_less(char *lhs, char *rhs) { return strcmp(lhs, rhs) < 0; }
 
-// define my container type
-typedef char** line_array_t;
+size_t read_data(char** &line_array) {
+  // allocate memory for string buffer
+  static const int BUF_SIZE = (1024);
+  char *buffer = (char*)malloc(BUF_SIZE);
 
-
-void line_array_append(line_array_t& line_array, size_t& count, char* line) {
-  line_array[count] = line;
-  ++count;
-}
-
-size_t read_data(
-    char *data_buffer,
-    line_array_t &line_array,
-    void (appen_func) (line_array_t&, size_t& count, char*)) {
-
-  size_t buffer_size = 0;
   size_t count = 0;
 
   while (1) {
-    char *line_buffer = &data_buffer[buffer_size];
-    if (scanf("%s", line_buffer) != 1) {
+    if (!fgets(buffer, BUF_SIZE, stdin)) {
       break;
     }
-    size_t length = strlen(line_buffer);
+    size_t length = strlen(buffer);
+    std::cout << length << "bytes read" << std::endl;
+    char *line = (char*)malloc(length);
+    memcpy(line, buffer, length);
     
-    // append pointer to line array
-    // !!! you should store line pointers in structure specified in YOUR statement !!! 
-    line_array_append(line_array, count, line_buffer);
-
-    buffer_size += length + 1;
+    if (line[length - 1] == '\n') {
+      line[length - 1] = '\0';
+    }
+    
+    line_array[count] = line;
+    ++count;
   }
 
+  free(buffer);
   return count;
 }
 
-void print_line_array(line_array_t data, size_t count) {
+void free_data(char** data, size_t count) {
+  for (int index = 0; index < count; ++index) {
+    free(data[index]);
+  }
+}
+
+void print_line_array(char **data, size_t count) {
   // print sorted result
   for (int index = 0; index < count; ++index) {
     printf("%s\n", data[index]);
   }
 }
 
-int main() {
-  // allocate memory for string buffer
-  static const int MAX_DATA_SIZE = (4 * 1024 * 1024);
-  char *data_buffer = (char*)malloc(MAX_DATA_SIZE);
+//  overwrite string comparison operator
+bool my_less(const char *lhs, const char *rhs) { return strcmp(lhs, rhs) < 0; }
 
+void my_sort(char **begin, char **end, bool (*_less)(const char*,const char*)) {
+  std::sort(begin, end, _less);
+}
+
+int main() {
   // allocate memory for your structure (array, stack, list, etc.)
   static const int MAX_LINE_COUNT = (1024 * 1024);
   char **line_array = (char**)malloc(sizeof(char*) * MAX_LINE_COUNT);
  
-  int count = read_data(data_buffer, line_array, line_array_append);
+  int count = read_data(line_array);
 
   // you should replace this with your own version of sort
-  std::sort(&line_array[0], &line_array[count], my_less);
+  //std::sort(&line_array[0], &line_array[count], my_less);
+  my_sort(&line_array[0], &line_array[count], my_less);
 
   print_line_array(line_array, count);
 
+  free_data(line_array, count);
   free(line_array); // release memory user for your structure (array, stack, list, etc.)
-  free(data_buffer); // release memory used for data_buffer
 
   return 0;
 }
